@@ -1,0 +1,45 @@
+{
+  "version": "v0.9.1",
+  "checked_at": "2026-11-19T11:02:33.675916+00:00",
+  "surface": "ACTUAL_HEADLESS_EDGE_DOM_LOCAL_HTTP_SQLITE_WITH_EXPLICIT_FAKE_MODEL",
+  "paid_provider_calls": 0,
+  "simulated_model_calls": 6,
+  "public_paid_counter_before": 6,
+  "public_paid_counter_after": 6,
+  "browser_scenarios_passed": 22,
+  "checks": [
+    "unrun has exactly one visible strong action",
+    "unrun hides matrix and review",
+    "empty generation comparison and notes are collapsed",
+    "original batch run disables its only primary",
+    "polling result updates even while note editor focused",
+    "polling preserves draft and editor focus",
+    "switching to unrun case does not inherit previous pass",
+    "other case completion does not auto-run next case",
+    "inspector narrow viewport no document overflow",
+    "candidate creation leads directly to pending regression",
+    "gate puts regression above configuration",
+    "gate configuration and decision controls are initially collapsed",
+    "all-pass gate leads to an explicit range decision",
+    "gate narrow viewport no document overflow",
+    "view conclusion opens saved decision history",
+    "saved conclusion survives reload",
+    "failure gives record-and-repair action",
+    "failure automatically opens evidence",
+    "record action opens notes",
+    "invalid judge stays unknown and points to missing evidence",
+    "no page script errors",
+    "public paid call counter unchanged"
+  ],
+  "viewports": [
+    "1440x1000",
+    "390x844"
+  ],
+  "page_errors": [],
+  "limits": [
+    "headless Edge only",
+    "not physical mobile",
+    "simulated results do not prove model quality",
+    "not a demo video"
+  ]
+}

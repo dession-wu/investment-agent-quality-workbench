@@ -1,0 +1,17 @@
+{
+  "version": "v0.9.1",
+  "checked_at": "2026-11-19T11:04:25.346294+00:00",
+  "surface": "ACTUAL_PUBLIC_HEADLESS_EDGE_DOM_NO_PAID_CALLS",
+  "health_version": "v0.9.1",
+  "created_task_and_candidate": true,
+  "note_persisted": true,
+  "unrun_results_stay_unrun": true,
+  "exhaustion_reason_visible_and_primary_disabled": true,
+  "reload_restores_candidate": true,
+  "desktop_and_narrow": true,
+  "narrow_document_overflow": false,
+  "page_errors": [],
+  "paid_calls_before": 6,
+  "paid_calls_after": 6,
+  "new_paid_calls": 0
+}

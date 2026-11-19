@@ -1,0 +1,32 @@
+{
+  "version": "v0.9.1",
+  "deployed": true,
+  "before": {
+    "rows": {
+      "batches": 26,
+      "notes": 9,
+      "runs": 6,
+      "decisions": 0
+    },
+    "used": 6,
+    "active": 0
+  },
+  "after": {
+    "rows": {
+      "batches": 26,
+      "notes": 9,
+      "runs": 6,
+      "decisions": 0
+    },
+    "used": 6,
+    "active": 0
+  },
+  "data_preserved": true,
+  "schema_changed": false,
+  "runtime_eight_files": "BYTE_IDENTICAL",
+  "provider_configured": true,
+  "global_cap": 6,
+  "new_paid_calls": 0,
+  "budget_reset": false,
+  "private_backup_excluded": true
+}
