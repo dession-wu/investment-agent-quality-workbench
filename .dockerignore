@@ -1,0 +1,13 @@
+__pycache__
+*.pyc
+.git
+.env
+*.local.*
+*.sqlite3*
+*.zip
+*.txt
+*.md
+test_*.py
+verify_live.py
+测试结果*.json
+真实链路*.json

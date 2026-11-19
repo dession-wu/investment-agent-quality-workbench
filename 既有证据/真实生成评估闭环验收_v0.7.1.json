@@ -1,0 +1,93 @@
+{
+  "version": "v0.7.1",
+  "checked_at": "2026-11-19T02:28:42.077464+00:00",
+  "stage": "FINISHED",
+  "surface": "ACTUAL_LOCAL_HTTP_SQLITE_PROVIDER_NOT_BROWSER",
+  "batch_id": "batch-ba4f25ff2e8c420c",
+  "scope": "F02单例，构造资料，P2提示词",
+  "requests_this_check": 2,
+  "global_calls_used": 6,
+  "global_call_cap": 6,
+  "runs": [
+    {
+      "kind": "generation",
+      "status": "completed",
+      "error": null,
+      "http_status": 200,
+      "provider_status": "completed",
+      "usage": {
+        "input_tokens": 393,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 173,
+        "output_tokens_details": {
+          "reasoning_tokens": 124
+        },
+        "total_tokens": 566,
+        "x_details": [
+          {
+            "input_tokens": 393,
+            "output_tokens": 173,
+            "output_tokens_details": {
+              "reasoning_tokens": 124
+            },
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 566,
+            "x_billing_type": "response_api"
+          }
+        ]
+      },
+      "response_model": "auto"
+    },
+    {
+      "kind": "judge",
+      "status": "completed",
+      "error": null,
+      "http_status": 200,
+      "provider_status": "completed",
+      "usage": {
+        "input_tokens": 728,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 848,
+        "output_tokens_details": {
+          "reasoning_tokens": 730
+        },
+        "total_tokens": 1576,
+        "x_details": [
+          {
+            "input_tokens": 728,
+            "output_tokens": 848,
+            "output_tokens_details": {
+              "reasoning_tokens": 730
+            },
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 1576,
+            "x_billing_type": "response_api"
+          }
+        ]
+      },
+      "response_model": "auto"
+    }
+  ],
+  "quality": "PASS",
+  "effective_checks": {
+    "numeric": "PASS",
+    "safety": "PASS",
+    "task": "PASS"
+  },
+  "blockers": [],
+  "decision_saved": true,
+  "automatic_retry": false,
+  "fallback": false,
+  "actual_model_disclosed": false,
+  "browser_verified": false
+}

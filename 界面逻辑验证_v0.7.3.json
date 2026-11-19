@@ -1,0 +1,12 @@
+{
+  "version": "v0.7.3",
+  "passed": 4,
+  "total": 4,
+  "scope": "Node VM HTML rendering and action guards; not browser visual/DOM interaction",
+  "checks": [
+    "exhausted controls",
+    "legacy readonly and no fake loading",
+    "missing evaluation failure evidence",
+    "legacy programmatic guard"
+  ]
+}

@@ -1,0 +1,14 @@
+services:
+  workbench:
+    build: .
+    image: investment-agent-mvp:v0.7.3
+    ports:
+      - "127.0.0.1:8766:8765"
+    environment:
+      QWEN_TOKEN_PLAN_API_KEY: ${QWEN_TOKEN_PLAN_API_KEY:-}
+      COOKIE_SECURE: ${COOKIE_SECURE:-0}
+    volumes:
+      - investment-mvp-data:/data
+    restart: unless-stopped
+volumes:
+  investment-mvp-data:

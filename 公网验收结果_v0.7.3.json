@@ -1,0 +1,23 @@
+{
+  "version": "v0.7.3",
+  "checked_at": "2026-11-19T03:07:53.213877+00:00",
+  "url": "https://podnotes.cloud/investment/",
+  "surface": "ACTUAL_PUBLIC_HTTPS_HTTP_CLIENT_NOT_BROWSER",
+  "checks": {
+    "public_html_relative_assets": "PASS",
+    "create_note_and_reload_read": "PASS",
+    "candidate_freezes_benchmark": "PASS",
+    "keyless_execution_blocks_before_provider": "PASS",
+    "session_isolation": "PASS",
+    "real_history_archive": "PASS",
+    "provider_calls_unchanged": "PASS",
+    "private_paths_not_served": "PASS",
+    "existing_homepage_reachable": "PASS"
+  },
+  "global_calls_before": 0,
+  "global_calls_after": 0,
+  "configured": false,
+  "new_paid_calls": 0,
+  "browser_visual": "NOT_VERIFIED",
+  "limitation": "Reload verified by subsequent HTTPS GET with same cookie, not a real browser F5. Public instance has no model credentials."
+}
