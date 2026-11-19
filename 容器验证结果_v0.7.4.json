@@ -1,0 +1,15 @@
+{
+  "version": "v0.7.4",
+  "checked_at": "2026-11-19T04:09:46.094787+00:00",
+  "image_id": "sha256:73a557094be8a9fc5253feed6510d8beaee49c847cda49cdc2d5d1df587d64c4",
+  "image_user": "10001:10001",
+  "startup_http": "PASS",
+  "volume_write": "PASS",
+  "restart_restores_cookie_bound_batch_and_note": true,
+  "archive_records": 28,
+  "provider_configured": false,
+  "new_api_calls": 0,
+  "public_deployment": "NOT_RUN",
+  "browser": "NOT_RUN",
+  "test_container_and_volume": "removed in finally"
+}

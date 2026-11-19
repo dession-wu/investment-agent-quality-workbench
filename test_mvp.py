@@ -430,6 +430,6 @@ class MVPTests(unittest.TestCase):
 if __name__=='__main__':
     suite=unittest.defaultTestLoader.loadTestsFromTestCase(MVPTests)
     result=unittest.TextTestRunner(verbosity=2).run(suite)
-    report={'version':'v0.7.3','provider':'explicitly_simulated','scope':'实际Python HTTP服务器、SQLite、会话Cookie和领域约束；模型返回为测试替身，不是浏览器或真实API验收','tests_run':result.testsRun,'passed':result.testsRun-len(result.errors)-len(result.failures),'failures':[(str(t),trace) for t,trace in result.failures+result.errors]}
-    (Path(__file__).parent/'测试结果_v0.7.3.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
+    report={'version':'v0.7.4','provider':'explicitly_simulated','scope':'实际Python HTTP服务器、SQLite、会话Cookie和领域约束；模型返回为测试替身，不是浏览器或真实API验收','tests_run':result.testsRun,'passed':result.testsRun-len(result.errors)-len(result.failures),'failures':[(str(t),trace) for t,trace in result.failures+result.errors]}
+    (Path(__file__).parent/'测试结果_v0.7.4.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
     raise SystemExit(0 if result.wasSuccessful() else 1)

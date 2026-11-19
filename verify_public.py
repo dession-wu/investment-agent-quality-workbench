@@ -17,10 +17,10 @@ def request(path,body=None,client=opener):
 def post(path,body):return request(path,body)[0]
 checks={}
 page,status=request('/')
-assert status==200 and './app.js' in page and '0.7.3' in page;checks['public_html_relative_assets']='PASS'
+assert status==200 and './app.js' in page and '0.7.4' in page;checks['public_html_relative_assets']='PASS'
 for path in ['/app.js','/style.css']:
     _,status=request(path);assert status==200
-state,_=request('/api/state');assert state['version']=='v0.7.3' and not state['configured'];used=state['global_calls_used']
+state,_=request('/api/state');assert state['version']=='v0.7.4' and not state['configured'];used=state['global_calls_used']
 bid=post('/api/batches',{'name':'公网HTTPS验收 · 匿名构造F02','case_ids':['F02'],'source':'constructed'})['batch_id']
 post('/api/batches/'+bid+'/notes',{'text':'公网验收意见：只验证匿名测试记录保存与恢复，不解除UNKNOWN阻断。'})
 snap,_=request('/api/batches/'+bid)
@@ -46,6 +46,6 @@ for path in ['/server.py','/.env','/work/qwen-token-plan.local.json']:
 checks['private_paths_not_served']='PASS'
 with opener.open(Request('https://podnotes.cloud/',headers={'User-Agent':'Mozilla/5.0'}),timeout=20) as r:assert r.status==200
 checks['existing_homepage_reachable']='PASS'
-report={'version':'v0.7.3','checked_at':datetime.now(timezone.utc).isoformat(),'url':BASE+'/','surface':'ACTUAL_PUBLIC_HTTPS_HTTP_CLIENT_NOT_BROWSER','checks':checks,'global_calls_before':used,'global_calls_after':final['global_calls_used'],'configured':False,'new_paid_calls':0,'browser_visual':'NOT_VERIFIED','limitation':'Reload verified by subsequent HTTPS GET with same cookie, not a real browser F5. Public instance has no model credentials.'}
-(Path(__file__).parent/'公网验收结果_v0.7.3.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
+report={'version':'v0.7.4','checked_at':datetime.now(timezone.utc).isoformat(),'url':BASE+'/','surface':'ACTUAL_PUBLIC_HTTPS_HTTP_CLIENT_NOT_BROWSER','checks':checks,'global_calls_before':used,'global_calls_after':final['global_calls_used'],'configured':False,'new_paid_calls':0,'browser_visual':'NOT_VERIFIED','limitation':'Reload verified by subsequent HTTPS GET with same cookie, not a real browser F5. Public instance has no model credentials.'}
+(Path(__file__).parent/'公网验收结果_v0.7.4.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
 print(json.dumps(report,ensure_ascii=False,indent=2))
