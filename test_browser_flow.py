@@ -89,6 +89,6 @@ with tempfile.TemporaryDirectory() as tmp:
     finally:client.proceed.set();server.shutdown();server.server_close();app.close()
 after=public_count()
 check('public paid call counter unchanged',after==before)
-report={'version':'v0.9.1','checked_at':datetime.now(timezone.utc).isoformat(),'surface':'ACTUAL_HEADLESS_EDGE_DOM_LOCAL_HTTP_SQLITE_WITH_EXPLICIT_FAKE_MODEL','paid_provider_calls':0,'simulated_model_calls':client.calls,'public_paid_counter_before':before,'public_paid_counter_after':after,'browser_scenarios_passed':len(checks),'checks':checks,'viewports':['1440x1000','390x844'],'page_errors':errors,'limits':['headless Edge only','not physical mobile','simulated results do not prove model quality','not a demo video']}
-(APP/'浏览器交互验证_v0.9.1.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
+report={'version':'v0.9.2','checked_at':datetime.now(timezone.utc).isoformat(),'surface':'ACTUAL_HEADLESS_EDGE_DOM_LOCAL_HTTP_SQLITE_WITH_EXPLICIT_FAKE_MODEL','paid_provider_calls':0,'simulated_model_calls':client.calls,'public_paid_counter_before':before,'public_paid_counter_after':after,'browser_scenarios_passed':len(checks),'checks':checks,'viewports':['1440x1000','390x844'],'page_errors':errors,'limits':['headless Edge only','not physical mobile','simulated results do not prove model quality','not a demo video']}
+(APP/'浏览器交互验证_v0.9.2.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
 print(json.dumps(report,ensure_ascii=True))

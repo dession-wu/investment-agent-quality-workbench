@@ -1,0 +1,36 @@
+{
+  "version": "v0.9.2",
+  "checked_at": "2026-11-19T11:17:32.127573+00:00",
+  "surface": "ACTUAL_HEADLESS_EDGE_WITH_LOCAL_HTTP_SQLITE_AND_EXPLICIT_FAKE_MODEL",
+  "checks_passed": 17,
+  "checks": [
+    "vector brand image loaded",
+    "favicon serves SVG",
+    "name and subtitle use stacked lockup",
+    "no quota/request/session badges",
+    "nav has four icons and no numeric prefixes",
+    "collapsed sidebar is narrower and all labels hidden",
+    "collapsed hover exposes module name",
+    "collapse persists across reload",
+    "collapsed keyboard focus exposes module name",
+    "icon-only keyboard navigation works",
+    "historical usage does not disable run button",
+    "uncapped dispatch executes despite very high audit counter",
+    "mobile expanded has no document overflow",
+    "mobile collapsed keeps four accessible navigation buttons",
+    "mobile collapsed has no document overflow",
+    "collapsed mobile navigation remains clickable",
+    "no page script errors"
+  ],
+  "simulated_calls": 2,
+  "paid_calls": 0,
+  "page_errors": [],
+  "viewports": [
+    "1440x1000",
+    "390x844"
+  ],
+  "limitations": [
+    "not physical mobile",
+    "no paid provider call made"
+  ]
+}

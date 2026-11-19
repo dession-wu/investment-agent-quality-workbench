@@ -6,7 +6,7 @@ from http.cookiejar import CookieJar
 import json, tempfile, threading, time, unittest, uuid
 from unittest.mock import patch
 from io import BytesIO
-from server import Application, ModelClient, Problem, make_server, evaluate, PROVIDER, CALL_CAP
+from server import Application, ModelClient, Problem, make_server, evaluate, PROVIDER
 from numeric import quantitative, value_in_quote
 
 class FakeClient(ModelClient):
@@ -196,13 +196,12 @@ class MVPTests(unittest.TestCase):
         b['unit']='元'
         self.assertEqual(quantitative({**b,'value':'168838102514.79'},{**b,'value':'168838102514.78'}),'FAIL')
 
-    def test_15_call_cap_blocks_before_scheduling(self):
-        bid = self.create()
-        with self.app.db() as db:
-            db.execute('UPDATE provider_budget SET used=? WHERE provider=?',(CALL_CAP,PROVIDER))
-        with self.assertRaises(Problem): self.action(bid,'run',{'case_ids':['F02']})
-        self.assertEqual(self.app.read(self.sid,'/api/state')['global_calls_used'],CALL_CAP)
-        self.assertFalse(self.get(bid)['cases'][0]['runs'])
+    def test_15_high_global_counter_does_not_block_execution(self):
+        bid=self.create()
+        with self.app.db() as db:db.execute('UPDATE provider_budget SET used=10000 WHERE provider=?',(PROVIDER,))
+        snap=self.run_cases(bid,['F02'])
+        self.assertEqual(snap['cases'][0]['overall'],'PASS')
+        self.assertEqual(self.app.read(self.sid,'/api/state')['global_calls_used'],10002)
 
     def test_16_review_wrong_evidence_and_duplicate_decision(self):
         bid = self.create()
@@ -408,24 +407,15 @@ class MVPTests(unittest.TestCase):
         self.assertTrue(after['failure_context']['evaluation_missing_for_run'])
         self.assertEqual(self.app.read(self.sid,'/api/state')['global_calls_used'],1)
 
-    def test_33_exhausted_run_retry_reevaluate_reject_before_dirty_writes(self):
-        bid=self.create(source='constructed')
-        self.client.fail=True
-        self.run_cases(bid,['F02'])
-        fresh=self.create(source='generated')
-        with self.app.db() as db:
-            db.execute('UPDATE provider_budget SET used=? WHERE provider=?',(CALL_CAP,PROVIDER))
-        def counts():
-            with self.app.db() as db:
-                return {t:db.execute('SELECT count(*) FROM '+t).fetchone()[0] for t in ['runs','evaluations','events','submissions']}
-        baseline=counts()
-        with patch.object(self.client,'call',side_effect=AssertionError('Must never send')):
-            for target,action,extra in [(fresh,'run',{}),(bid,'run',{'retry':True}),(bid,'reevaluate',{})]:
-                with self.subTest(action=action,extra=extra):
-                    with self.assertRaises(Problem) as error:self.action(target,action,{'case_ids':['F02'],**extra})
-                    self.assertEqual(error.exception.status,409)
-                    self.assertEqual(counts(),baseline)
-        self.assertEqual(self.app.read(self.sid,'/api/state')['global_calls_used'],CALL_CAP)
+    def test_33_high_counter_allows_explicit_retry_reevaluation_and_new_run(self):
+        bid=self.create(source='constructed');self.client.fail=True;self.run_cases(bid,['F02']);self.client.fail=False
+        with self.app.db() as db:db.execute('UPDATE provider_budget SET used=50000 WHERE provider=?',(PROVIDER,))
+        self.action(bid,'run',{'case_ids':['F02'],'retry':True})
+        while any(c['active'] for c in self.get(bid)['cases']):time.sleep(.01)
+        self.action(bid,'reevaluate',{'case_ids':['F02']})
+        while any(c['active'] for c in self.get(bid)['cases']):time.sleep(.01)
+        fresh=self.create();self.run_cases(fresh,['F02'])
+        self.assertEqual(self.app.read(self.sid,'/api/state')['global_calls_used'],50004)
 
     def test_34_legacy_note_table_migrates_without_losing_records(self):
         bid=self.create(source='constructed')
@@ -510,20 +500,23 @@ class MVPTests(unittest.TestCase):
         with self.assertRaises(Problem) as caught:self.write('/api/batches',{'name':'duplicate','case_ids':['F02','F02']})
         self.assertIn('不能重复',str(caught.exception))
 
-    def test_43_session_budget_rejects_whole_chain_before_scheduling(self):
+    def test_43_high_session_counter_does_not_block_execution(self):
         bid=self.create()
-        with self.app.db() as db:
-            db.execute('INSERT INTO provider_calls(session_id,provider,used) VALUES(?,?,?)',(self.sid,PROVIDER,CALL_CAP-1))
-        with self.assertRaises(Problem) as error:
-            self.action(bid,'run',{'case_ids':['F02']})
-        self.assertEqual(error.exception.status,409)
-        with self.app.db() as db:
-            self.assertEqual(db.execute('SELECT count(*) FROM runs').fetchone()[0],0)
-            self.assertEqual(db.execute('SELECT used FROM provider_budget WHERE provider=?',(PROVIDER,)).fetchone()[0],0)
+        with self.app.db() as db:db.execute('INSERT INTO provider_calls(session_id,provider,used) VALUES(?,?,10000)',(self.sid,PROVIDER))
+        self.run_cases(bid,['F02'])
+        state=self.app.read(self.sid,'/api/state')
+        self.assertEqual(state['session_calls'],10002)
+        self.assertIsNone(state['session_call_cap']);self.assertIsNone(state['global_call_cap'])
+
+    def test_44_uncapped_state_survives_restart_without_resetting_counts(self):
+        with self.app.db() as db:db.execute('UPDATE provider_budget SET used=999999 WHERE provider=?',(PROVIDER,))
+        self.app.close();self.app=Application(self.path,self.client)
+        state=self.app.read(self.sid,'/api/state')
+        self.assertEqual(state['global_calls_used'],999999);self.assertIsNone(state['global_call_cap'])
 
 if __name__=='__main__':
     suite=unittest.defaultTestLoader.loadTestsFromTestCase(MVPTests)
     result=unittest.TextTestRunner(verbosity=2).run(suite)
-    report={'version':'v0.9.1','provider':'explicitly_simulated','scope':'实际Python HTTP服务器、SQLite、会话Cookie和领域约束；模型返回为测试替身，不是浏览器或真实API验收','tests_run':result.testsRun,'passed':result.testsRun-len(result.errors)-len(result.failures),'failures':[(str(t),trace) for t,trace in result.failures+result.errors]}
-    (Path(__file__).parent/'测试结果_v0.9.1.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
+    report={'version':'v0.9.2','provider':'explicitly_simulated','scope':'实际Python HTTP服务器、SQLite、会话Cookie和领域约束；模型返回为测试替身，不是浏览器或真实API验收','tests_run':result.testsRun,'passed':result.testsRun-len(result.errors)-len(result.failures),'failures':[(str(t),trace) for t,trace in result.failures+result.errors]}
+    (Path(__file__).parent/'测试结果_v0.9.2.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
     raise SystemExit(0 if result.wasSuccessful() else 1)

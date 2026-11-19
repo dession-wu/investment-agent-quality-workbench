@@ -15,10 +15,9 @@ from numeric import quantitative, value_in_quote, VERSION as NUMERIC_VERSION
 
 HERE = Path(__file__).resolve().parent
 WORKSPACE = HERE.parent.parent
-VERSION = 'v0.9.1'
+VERSION = 'v0.9.2'
 PROVIDER = 'aliyun_token_plan'
 PROVIDER_LABEL = '在线模型'
-CALL_CAP = 6
 INPUT_LIMIT = 8000
 POSTPROCESS_VERSION = 'judge-json-v0.7.1-single-fence'
 ALLOWED_MODELS = ['auto']
@@ -271,7 +270,7 @@ class Application:
                 warning = None
                 budget_used = db.execute('SELECT used FROM provider_budget WHERE provider=?', (PROVIDER,)).fetchone()['used']
                 batches = [self.snapshot(db, sid, r['id']) for r in db.execute('SELECT id FROM batches WHERE session_id=? ORDER BY rowid DESC', (sid,)).fetchall()]
-                return {'version': VERSION, 'provider': PROVIDER_LABEL, 'provider_id': PROVIDER, 'postprocess_version': POSTPROCESS_VERSION, 'wire_api': 'responses', 'global_calls_used': budget_used, 'global_call_cap': CALL_CAP, 'configured': self.client.enabled, 'provider_warning': warning, 'models': ALLOWED_MODELS, 'judge_model': 'auto', 'session_calls': calls, 'session_call_cap': CALL_CAP, 'batches': batches, 'templates': self.fixtures, 'limits': ['聚焦3变体/2母题；构造证据，不是实时行情或投资建议', '同供应商裁判，参考未独立人工复核', 'H05/Q08与全量测试集尚未迁移，原型另行保留', '当前浏览器凭会话Cookie恢复；不具备登录与多人审批']}
+                return {'version': VERSION, 'provider': PROVIDER_LABEL, 'provider_id': PROVIDER, 'postprocess_version': POSTPROCESS_VERSION, 'wire_api': 'responses', 'global_calls_used': budget_used, 'global_call_cap': None, 'configured': self.client.enabled, 'provider_warning': warning, 'models': ALLOWED_MODELS, 'judge_model': 'auto', 'session_calls': calls, 'session_call_cap': None, 'batches': batches, 'templates': self.fixtures, 'limits': ['聚焦3变体/2母题；构造证据，不是实时行情或投资建议', '同供应商裁判，参考未独立人工复核', 'H05/Q08与全量测试集尚未迁移，原型另行保留', '当前浏览器凭会话Cookie恢复；不具备登录与多人审批']}
             if path == '/api/archive':
                 return json.loads((HERE/'archive.json').read_text(encoding='utf-8'))
             parts = path.strip('/').split('/')
@@ -355,9 +354,7 @@ class Application:
                     require(not db.execute("SELECT 1 FROM runs WHERE status IN ('queued','running','processing') LIMIT 1").fetchone(), '已有任务执行中，请等待后手动继续', 409)
                     need = 2 if batch['source'] == 'generated' and action != 'reevaluate' else 1
                     used = db.execute('SELECT used FROM provider_budget WHERE provider=?', (PROVIDER,)).fetchone()['used']
-                    require(used + need <= CALL_CAP, '全局低成本调用额度不足；不会自动增加额度', 409)
                     counter = db.execute('SELECT used FROM provider_calls WHERE session_id=? AND provider=?', (sid, PROVIDER)).fetchone()
-                    require((counter['used'] if counter else 0) + need <= CALL_CAP, '本会话核验额度不足，未创建运行任务', 409)
                     for cid in selected:
                         last = db.execute('SELECT * FROM runs WHERE batch_id=? AND case_id=? ORDER BY rowid DESC LIMIT 1', (bid, cid)).fetchone()
                         if action == 'reevaluate':
@@ -430,9 +427,6 @@ class Application:
             if len(wire['instructions'])+sum(len(c['text']) for item in wire['input'] for c in item['content']) > INPUT_LIMIT:
                 db.execute("UPDATE runs SET status='failed',error='INPUT_CHAR_LIMIT',finished_at=? WHERE id=?", (now(), rid))
                 return 'failed', {}, 'INPUT_CHAR_LIMIT'
-            if calls >= CALL_CAP or used >= CALL_CAP:
-                db.execute("UPDATE runs SET status='failed',error='CALL_CAP',finished_at=? WHERE id=?", (now(), rid))
-                return 'failed', {}, 'CALL_CAP'
             db.execute('INSERT INTO provider_calls(session_id,provider,used) VALUES(?,?,1) ON CONFLICT(session_id,provider) DO UPDATE SET used=used+1', (sid, PROVIDER))
             db.execute('UPDATE provider_budget SET used=used+1 WHERE provider=?', (PROVIDER,))
             db.execute('UPDATE sessions SET calls=calls+1 WHERE id=?', (sid,))
@@ -527,7 +521,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         path = urlparse(self.path).path
-        static = {'/': ('index.html', 'text/html; charset=utf-8'), '/app.js': ('app.js', 'application/javascript; charset=utf-8'), '/style.css': ('style.css', 'text/css; charset=utf-8')}
+        static = {'/': ('index.html', 'text/html; charset=utf-8'), '/app.js': ('app.js', 'application/javascript; charset=utf-8'), '/style.css': ('style.css', 'text/css; charset=utf-8'), '/brand-mark.svg': ('brand-mark.svg', 'image/svg+xml')}
         try:
             if path in static:
                 name, mime = static[path]
