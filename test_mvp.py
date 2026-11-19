@@ -499,9 +499,20 @@ class MVPTests(unittest.TestCase):
         self.assertFalse(self.get(bid)['dispositions'][0]['valid'])
         with self.assertRaises(Problem):self.write('/api/batches/'+bid+'/dispositions',{'revision':old['batch']['revision'],'outcome':'archive','reason':'stale request'})
 
+    def test_41_empty_case_selection_has_specific_message_without_dirty_writes(self):
+        before=len(self.app.read(self.sid,'/api/state')['batches'])
+        with self.assertRaises(Problem) as caught:self.write('/api/batches',{'name':'empty','case_ids':[]})
+        self.assertEqual(caught.exception.args[0],'请至少选择 1 个用例')
+        self.assertEqual(len(self.app.read(self.sid,'/api/state')['batches']),before)
+        self.assertEqual(self.app.read(self.sid,'/api/state')['global_calls_used'],0)
+
+    def test_42_duplicate_case_selection_is_not_reported_as_empty(self):
+        with self.assertRaises(Problem) as caught:self.write('/api/batches',{'name':'duplicate','case_ids':['F02','F02']})
+        self.assertIn('不能重复',str(caught.exception))
+
 if __name__=='__main__':
     suite=unittest.defaultTestLoader.loadTestsFromTestCase(MVPTests)
     result=unittest.TextTestRunner(verbosity=2).run(suite)
-    report={'version':'v0.8.1','provider':'explicitly_simulated','scope':'实际Python HTTP服务器、SQLite、会话Cookie和领域约束；模型返回为测试替身，不是浏览器或真实API验收','tests_run':result.testsRun,'passed':result.testsRun-len(result.errors)-len(result.failures),'failures':[(str(t),trace) for t,trace in result.failures+result.errors]}
-    (Path(__file__).parent/'测试结果_v0.8.1.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
+    report={'version':'v0.8.2','provider':'explicitly_simulated','scope':'实际Python HTTP服务器、SQLite、会话Cookie和领域约束；模型返回为测试替身，不是浏览器或真实API验收','tests_run':result.testsRun,'passed':result.testsRun-len(result.errors)-len(result.failures),'failures':[(str(t),trace) for t,trace in result.failures+result.errors]}
+    (Path(__file__).parent/'测试结果_v0.8.2.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
     raise SystemExit(0 if result.wasSuccessful() else 1)

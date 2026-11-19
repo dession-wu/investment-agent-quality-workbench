@@ -1,0 +1,8 @@
+{
+  "version": "v0.8.2",
+  "provider": "explicitly_simulated",
+  "scope": "实际Python HTTP服务器、SQLite、会话Cookie和领域约束；模型返回为测试替身，不是浏览器或真实API验收",
+  "tests_run": 42,
+  "passed": 42,
+  "failures": []
+}

@@ -9,3 +9,7 @@
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 
 .help-wrap[data-dismissed="true"]>.help-content{display:none}
+
+/* v0.8.2: protected drafts, explicit preset flow, readable configuration comparison */
+.draft-status{font-size:12px;color:var(--teal);padding:6px 0}.diff-value{white-space:pre-wrap;overflow-wrap:anywhere;min-width:180px;max-width:440px}.config-diff{border-top:1px solid var(--line);margin-top:18px;padding-top:12px}.config-diff .section-heading{justify-content:space-between}.config-diff h3{margin:0}.config-diff .unchanged{color:var(--muted)}del{color:#963a31;background:#fbece8;text-decoration:line-through}ins{color:#205d40;background:#e7f4e7;text-decoration:underline}.demo-banner{padding:16px 20px;border:1px solid #c9b683;background:#fbf3de;border-radius:8px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}.demo-banner span{font-size:13px}.demo-steps{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}.demo-steps .selected{background:var(--teal);color:white}.demo-outcome{padding:20px;background:#edf3e7;border:1px solid var(--line);margin-bottom:16px}.inspector-layout{grid-template-columns:minmax(0,1fr)}.inspector-layout>div:last-child{max-width:none}.inspector-layout .panel{margin-bottom:14px}.case-question{font-size:16px;margin-bottom:8px}.page-head{margin-bottom:16px}.inspector-layout .status-line{margin:8px 0}
+@media(max-width:720px){.demo-banner{padding:14px}.demo-steps button{font-size:12px;padding:6px 10px}.diff-value{min-width:170px}}

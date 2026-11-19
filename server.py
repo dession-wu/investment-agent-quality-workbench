@@ -15,7 +15,7 @@ from numeric import quantitative, value_in_quote, VERSION as NUMERIC_VERSION
 
 HERE = Path(__file__).resolve().parent
 WORKSPACE = HERE.parent.parent
-VERSION = 'v0.8.1'
+VERSION = 'v0.8.2'
 PROVIDER = 'aliyun_token_plan'
 PROVIDER_LABEL = '百炼 Token Plan'
 CALL_CAP = 6
@@ -295,7 +295,9 @@ class Application:
                 return json.loads(previous['response_json'])
             if route == '/api/batches':
                 ids = body.get('case_ids')
-                require(isinstance(ids, list) and ids and all(isinstance(k, str) for k in ids) and len(set(ids)) == len(ids), '请指定不重复的样例范围')
+                require(isinstance(ids, list), '请选择有效的用例范围')
+                require(bool(ids), '请至少选择 1 个用例')
+                require(all(isinstance(k, str) for k in ids) and len(set(ids)) == len(ids), '用例范围不能重复且必须使用有效标识')
                 require(set(ids) <= {c['id'] for c in self.fixtures['cases']}, '不支持的样例')
                 require(body.get('source', 'constructed') in {'constructed', 'generated'}, '回答来源非法')
                 model = body.get('model', ALLOWED_MODELS[0])
