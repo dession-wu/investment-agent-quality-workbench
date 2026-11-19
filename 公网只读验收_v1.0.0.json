@@ -1,0 +1,13 @@
+{
+  "version": "v1.0.0",
+  "checked_at": "2026-11-19T11:34:11.438053+00:00",
+  "surface": "READ_ONLY_ACTUAL_PUBLIC_HTTPS_NOT_BROWSER",
+  "brand": "PASS",
+  "health": "PASS",
+  "model_configured": true,
+  "archive_28": "PASS",
+  "private_paths": "BLOCKED",
+  "new_paid_calls": 0,
+  "calls_before": 9,
+  "calls_after": 9
+}

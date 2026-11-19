@@ -1,0 +1,22 @@
+{
+  "version": "v1.0.0",
+  "surface": "ACTUAL_PUBLIC_EDGE_NO_MODEL_DISPATCH",
+  "checks_passed": 8,
+  "checks": [
+    "unsaved draft restored after refresh",
+    "saved note persists on server",
+    "switching profile does not inherit other draft",
+    "aggressive profile shows same fixed 8.2 and 45 facts",
+    "profile page retains required risk reference",
+    "unrun profile not misrepresented as passed",
+    "guide dialog opens and Escape closes",
+    "no new model calls"
+  ],
+  "calls_before": 9,
+  "calls_after": 9,
+  "created_tasks": 1,
+  "new_paid_calls": 0,
+  "limits": [
+    "profile content and persistence checked; no new F07 model quality conclusion"
+  ]
+}

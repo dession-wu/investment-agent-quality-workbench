@@ -15,7 +15,7 @@ from numeric import quantitative, value_in_quote, VERSION as NUMERIC_VERSION
 
 HERE = Path(__file__).resolve().parent
 WORKSPACE = HERE.parent.parent
-VERSION = 'v0.9.2'
+VERSION = 'v1.0.0'
 PROVIDER = 'aliyun_token_plan'
 PROVIDER_LABEL = '在线模型'
 INPUT_LIMIT = 8000

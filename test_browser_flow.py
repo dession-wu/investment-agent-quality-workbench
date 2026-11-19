@@ -56,7 +56,7 @@ with tempfile.TemporaryDirectory() as tmp:
             check('switching to unrun case does not inherit previous pass',page.locator('.task-cue').inner_text().find('F07A')>=0 and '尚未开始核验' in page.locator('.result-section').inner_text())
             check('other case completion does not auto-run next case',client.calls==2)
             page.set_viewport_size({'width':390,'height':844});shot('04_首次进入_窄屏')
-            check('inspector narrow viewport no document overflow',not page.evaluate('document.documentElement.scrollWidth>innerWidth'))
+            check('inspector narrow emulated device has no overflow',not page.evaluate('document.documentElement.scrollWidth>innerWidth'))
             page.set_viewport_size({'width':1440,'height':1000})
             create(source='constructed',name='修复候选与回归')
             page.locator('#notes-drawer>summary').click();page.locator('#case-note').fill('累计与单季口径不同，修复需明确期间。')
@@ -71,7 +71,7 @@ with tempfile.TemporaryDirectory() as tmp:
             check('all-pass gate leads to an explicit range decision','记录本范围通过结论' in primary().inner_text())
             expect(primary()).to_be_enabled();shot('06_回归通过_桌面')
             page.set_viewport_size({'width':390,'height':844});shot('07_回归通过_窄屏')
-            check('gate narrow viewport no document overflow',not page.evaluate('document.documentElement.scrollWidth>innerWidth'))
+            check('gate narrow emulated device has no overflow',not page.evaluate('document.documentElement.scrollWidth>innerWidth'))
             page.set_viewport_size({'width':1440,'height':1000})
             primary().click();page.locator('#decision-form textarea[name=reason]').fill('仅本次构造F02固定范围通过，不授权真实生产发布。')
             page.locator('#decision-form button[type=submit]').click();expect(page.locator('.task-cue')).to_contain_text('已记录本测试范围通过结论')
@@ -89,6 +89,6 @@ with tempfile.TemporaryDirectory() as tmp:
     finally:client.proceed.set();server.shutdown();server.server_close();app.close()
 after=public_count()
 check('public paid call counter unchanged',after==before)
-report={'version':'v0.9.2','checked_at':datetime.now(timezone.utc).isoformat(),'surface':'ACTUAL_HEADLESS_EDGE_DOM_LOCAL_HTTP_SQLITE_WITH_EXPLICIT_FAKE_MODEL','paid_provider_calls':0,'simulated_model_calls':client.calls,'public_paid_counter_before':before,'public_paid_counter_after':after,'browser_scenarios_passed':len(checks),'checks':checks,'viewports':['1440x1000','390x844'],'page_errors':errors,'limits':['headless Edge only','not physical mobile','simulated results do not prove model quality','not a demo video']}
-(APP/'浏览器交互验证_v0.9.2.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
+report={'version':'v1.0.0','checked_at':datetime.now(timezone.utc).isoformat(),'surface':'ACTUAL_HEADLESS_EDGE_DOM_LOCAL_HTTP_SQLITE_WITH_EXPLICIT_FAKE_MODEL','paid_provider_calls':0,'simulated_model_calls':client.calls,'public_paid_counter_before':before,'public_paid_counter_after':after,'browser_scenarios_passed':len(checks),'checks':checks,'viewports':['1440x1000','390x844'],'page_errors':errors,'limits':['headless Edge only','not physical mobile','simulated results do not prove model quality','not a demo video']}
+(APP/'浏览器交互验证_v1.0.0.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
 print(json.dumps(report,ensure_ascii=True))

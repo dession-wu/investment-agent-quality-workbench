@@ -1,0 +1,62 @@
+{
+  "version": "v1.0.0",
+  "checked_at": "2026-11-19T11:25:02.895802+00:00",
+  "surface": "ACTUAL_HEADLESS_EDGE_BROWSER_ZOOM_VIA_TEMP_TEST_EXTENSION",
+  "checks_passed": 10,
+  "checks": [
+    "80% actual browser zoom preserves desktop columns",
+    "100% actual browser zoom preserves desktop columns",
+    "125% actual browser zoom preserves desktop columns",
+    "150% actual browser zoom preserves desktop columns",
+    "clear full product name",
+    "collapsed navigation survives refresh",
+    "keyboard navigation reaches historical archive",
+    "physical narrow screen uses mobile navigation",
+    "mobile full title stays inside viewport",
+    "no script errors"
+  ],
+  "zoom_measurements": [
+    {
+      "browser_zoom": 0.8,
+      "inner": 1762,
+      "dpr": 0.800000011920929,
+      "sidebar": 223.984375,
+      "cols": "359.121px 359.141px 359.121px 359.141px",
+      "nav": "grid",
+      "bodyWidth": 1762.5
+    },
+    {
+      "browser_zoom": 1,
+      "inner": 1410,
+      "dpr": 1,
+      "sidebar": 224,
+      "cols": "271px 271px 271px 271px",
+      "nav": "grid",
+      "bodyWidth": 1410
+    },
+    {
+      "browser_zoom": 1.25,
+      "inner": 1128,
+      "dpr": 1.25,
+      "sidebar": 224,
+      "cols": "200.5px 200.5px 200.5px 200.5px",
+      "nav": "grid",
+      "bodyWidth": 1128
+    },
+    {
+      "browser_zoom": 1.5,
+      "inner": 940,
+      "dpr": 1.5,
+      "sidebar": 224,
+      "cols": "198.5px 198.5px 198.5px 198.5px",
+      "nav": "grid",
+      "bodyWidth": 1120
+    }
+  ],
+  "new_paid_calls": 0,
+  "extension_scope": "temporary isolated test profile only; not installed in user browser",
+  "limitations": [
+    "headless Edge",
+    "narrow-device emulation, not physical handset"
+  ]
+}

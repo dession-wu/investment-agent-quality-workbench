@@ -1,0 +1,124 @@
+{
+  "version": "v1.0.0",
+  "recorded_at": "2026-11-19T11:33:48.868848+00:00",
+  "recording_type": "CONTINUOUS_PLAYWRIGHT_BROWSER_VIDEO_OF_PUBLIC_WEB_UI",
+  "surface": "ACTUAL_PUBLIC_HTTPS_HEADLESS_EDGE",
+  "duration_target_seconds": 120,
+  "chapters": [
+    {
+      "index": 1,
+      "start": 0,
+      "end": 12,
+      "title": "产品定位",
+      "narration": "这是投资Agent质量治理平台，帮助产品经理核对回答、定位问题，并验证修复。下面展示公网保存的真实核验结果。"
+    },
+    {
+      "index": 2,
+      "start": 12,
+      "end": 24,
+      "title": "原回答真实核验",
+      "narration": "原回答把累计增长百分之四十五写成单季增长。真实核验标记为失败，页面直接呈现问题和下一步。"
+    },
+    {
+      "index": 3,
+      "start": 24,
+      "end": 36,
+      "title": "对照证据",
+      "narration": "对照构造参考可以看到，单季是百分之八点二，累计是百分之四十五。参考来源和期间必须对齐，不能随画像改变。"
+    },
+    {
+      "index": 4,
+      "start": 36,
+      "end": 48,
+      "title": "问题记录",
+      "narration": "问题记录已保存到服务端。笔记帮助说明修复假设，但不会把核验失败改成通过，也不会解除阻断。"
+    },
+    {
+      "index": 5,
+      "start": 48,
+      "end": 60,
+      "title": "修复版本比较",
+      "narration": "修复候选明确要求区分单季和累计。字段对照保留修改前后差异，测试范围与核验参考保持冻结。"
+    },
+    {
+      "index": 6,
+      "start": 60,
+      "end": 72,
+      "title": "候选真实结果",
+      "narration": "本次候选经过真实生成和裁判，单季回答为百分之八点二。规则核验通过，只能支持这个构造用例的结论。"
+    },
+    {
+      "index": 7,
+      "start": 72,
+      "end": 84,
+      "title": "完整范围门禁",
+      "narration": "回归页比较原回答与候选的有效结果。所有冻结必检项通过才可记录范围结论，未知或未运行不能放行。"
+    },
+    {
+      "index": 8,
+      "start": 84,
+      "end": 96,
+      "title": "审计与结论",
+      "narration": "处理结论已写入并可刷新恢复，审计记录可导出。这里的范围通过不是生产上线，也不是不可篡改的可信认证。"
+    },
+    {
+      "index": 9,
+      "start": 96,
+      "end": 108,
+      "title": "历史真实实验",
+      "narration": "过往案例保留二十八次历史调用及原始记录。历史证据和本次真实核验分开，不能合并包装为总体准确率。"
+    },
+    {
+      "index": 10,
+      "start": 108,
+      "end": 120,
+      "title": "产品边界",
+      "narration": "目前聚焦三个构造用例，未接实时行情和完整生产反馈。页面操作为连续实录，展示已保存结果，本片未再次调用模型。"
+    }
+  ],
+  "paid_calls_before": 9,
+  "paid_calls_after": 9,
+  "new_paid_calls_during_recording": 0,
+  "page_errors": null,
+  "console_capture": "not retained after metadata serialization error; independent public functional walk captured no errors",
+  "metadata_recovery": "video completed and closed; corrected str/Path metadata error without changing or rerecording video",
+  "disclosures": [
+    "saved current real-provider results shown; no new inference triggered during recording",
+    "not recording user desktop or browser chrome",
+    "offline Chinese TTS; not a screenshot slideshow"
+  ],
+  "final_file": "演示视频_120秒.mp4",
+  "duration_seconds": 120.0,
+  "bytes": 3291078,
+  "video_codec": "h264",
+  "audio_codec": "aac",
+  "sha256": "9925cecce2cd171089d1fdfbf013873ec22c94a1c33891f1944280bf00e9f7c2",
+  "continuous": true,
+  "cuts_or_speed_changes": false,
+  "voice": "Windows offline Huihui Chinese TTS; padded each chapter, not truncated",
+  "captioned": true,
+  "audio_chapter_seconds": [
+    9.735238095238095,
+    8.145034013605443,
+    9.660136054421768,
+    8.12344671201814,
+    8.337551020408164,
+    8.620453514739228,
+    8.642222222222221,
+    9.032199546485261,
+    8.455736961451247,
+    10.203492063492064
+  ],
+  "inspection_frames_seconds": [
+    6,
+    18,
+    30,
+    42,
+    54,
+    66,
+    78,
+    90,
+    102,
+    114
+  ]
+}
