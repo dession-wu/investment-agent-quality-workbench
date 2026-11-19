@@ -16,3 +16,5 @@ CREATE INDEX IF NOT EXISTS idx_eval_batch ON evaluations(batch_id,case_id);
 
 CREATE TABLE IF NOT EXISTS provider_budget(provider TEXT PRIMARY KEY, used INTEGER NOT NULL DEFAULT 0);
 CREATE TABLE IF NOT EXISTS provider_calls(session_id TEXT NOT NULL REFERENCES sessions(id), provider TEXT NOT NULL, used INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(session_id,provider));
+
+CREATE TABLE IF NOT EXISTS dispositions(id TEXT PRIMARY KEY,batch_id TEXT NOT NULL REFERENCES batches(id),revision INTEGER NOT NULL,outcome TEXT NOT NULL,reason TEXT NOT NULL,created_at TEXT NOT NULL);

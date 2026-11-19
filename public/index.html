@@ -1,10 +1,6 @@
-<!doctype html>
-<html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>投资 Agent · 质量治理工作台</title><link rel="stylesheet" href="./style.css"><script defer src="./app.js"></script></head>
-<body>
-<header><a class="brand" href="./">QA<span> / </span>投资 Agent</a><span class="edition">质量治理工作台 · MVP 0.7.4</span><button id="refresh" class="quiet">刷新记录</button></header>
-<div class="shell"><aside><div class="side-label">评审工作区</div><button id="nav-work" class="nav active">01　工作台</button><button id="nav-review" class="nav">02　版本评审</button><button id="nav-archive" class="nav">03　历史实验</button><div class="side-foot"><span class="live-dot"></span> SQLite 持久保存<br><span id="provider-status">正在连接服务端</span><p>构造证据 · 调用能力以部署配置为准<br>不连接实时行情</p></div></aside>
-<main><div id="notice" role="status" aria-live="polite"></div><div id="app"><section class="empty">正在加载当前会话的记录…</section></div></main></div>
-<dialog id="modal" aria-labelledby="modal-title"><div class="dialog-head"><h2 id="modal-title"></h2><button id="modal-close" class="quiet" aria-label="关闭对话框">关闭 ×</button></div><div id="modal-body"></div></dialog>
-<footer>本作验证质量治理流程。模型裁判意见、确定性数值规则与人工复核分别留痕；范围决定不代表生产发布或投资建议。</footer>
-</body></html>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>投资 Agent · 质量治理</title><link rel="stylesheet" href="./style.css"><script defer src="./app.js"></script></head>
+<body><header><a class="brand" href="./">QA <span>/ 投资 Agent</span></a><span class="edition">治理工作台 · v0.8</span><span id="environment" class="environment">连接中</span><button id="refresh">刷新记录</button></header>
+<div class="shell"><aside><div class="side-label">一次有依据的版本评审</div><nav aria-label="业务导航"><button id="nav-work" data-view="work">01　治理工作台</button><button id="nav-inspector" data-view="inspector">02　用例排查与复核</button><button id="nav-gate" data-view="gate">03　版本回归与决定</button><button id="nav-archive" data-view="archive">04　历史真实实验</button></nav><div class="side-foot"><p id="provider-status"></p><p>匿名会话 · SQLite持久保存<br>仅使用匿名测试文本<br>不连接实时行情</p></div></aside>
+<main><div id="notice" role="status" aria-live="polite"></div><div id="app"><section class="panel">正在读取任务…</section></div></main></div>
+<dialog id="modal" aria-labelledby="modal-title"><div class="dialog-head"><h2 id="modal-title"></h2><button id="modal-close" aria-label="关闭对话框">关闭 ×</button></div><div id="modal-body"></div></dialog>
+<footer>构造参考与历史真实调用分别标注。评审决定仅适用于本次测试范围，不是生产发布、金融合规认证或不可篡改存证。</footer></body></html>

@@ -1,0 +1,27 @@
+{
+  "version": "v0.8",
+  "surface": "LOCAL_HTTP_AND_SQLITE_READ_NOT_PROVIDER",
+  "paid_counter": 6,
+  "call_cap": 6,
+  "new_paid_calls": 0,
+  "preserved_rows": {
+    "before": {
+      "batches": 7,
+      "notes": 2,
+      "answers": 6,
+      "runs": 8,
+      "evaluations": 6,
+      "decisions": 1
+    },
+    "after": {
+      "batches": 7,
+      "notes": 2,
+      "answers": 6,
+      "runs": 8,
+      "evaluations": 6,
+      "decisions": 1
+    }
+  },
+  "migration": "additive and original records preserved",
+  "private_backups_included": false
+}

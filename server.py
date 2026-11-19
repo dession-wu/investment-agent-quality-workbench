@@ -15,7 +15,7 @@ from numeric import quantitative, value_in_quote, VERSION as NUMERIC_VERSION
 
 HERE = Path(__file__).resolve().parent
 WORKSPACE = HERE.parent.parent
-VERSION = 'v0.7.4'
+VERSION = 'v0.8'
 PROVIDER = 'aliyun_token_plan'
 PROVIDER_LABEL = '百炼 Token Plan'
 CALL_CAP = 6
@@ -180,6 +180,8 @@ class Application:
         self.fixtures = json.loads((HERE/'fixtures.json').read_text(encoding='utf-8'))
         with self.db() as db:
             db.executescript((HERE/'schema.sql').read_text(encoding='utf-8'))
+            if 'case_id' not in {r['name'] for r in db.execute('PRAGMA table_info(notes)')}:
+                db.execute('ALTER TABLE notes ADD COLUMN case_id TEXT')
             db.execute('INSERT OR IGNORE INTO provider_budget(provider,used) VALUES(?,0)', (PROVIDER,))
             interrupted = db.execute("SELECT DISTINCT batch_id FROM runs WHERE status IN ('queued','running','processing')").fetchall()
             db.execute("UPDATE runs SET status='interrupted',error='SERVER_RESTART',finished_at=? WHERE status IN ('queued','running','processing')", (now(),))
@@ -254,11 +256,12 @@ class Application:
                 failure_context = {'run_id': last['id'], 'status': last['status'], 'error': last['error'],
                                    'http_status': result.get('http_status'), 'latency_seconds': result.get('latency_seconds'),
                                    'evaluation_missing_for_run': not ev or ev['run_id'] != last['id']}
-            rows.append({'failure_context': failure_context, 'case': case, 'answer': dict(answer) if answer else None, 'evaluation': {'id': ev['id'], 'raw_checks': json.loads(ev['checks_json']), 'detail': json.loads(ev['detail_json']), 'created_at': ev['created_at']} if ev else None, 'effective_checks': checks, 'overall': status, 'active': active, 'runs': runs, 'reviews': reviews})
+            workflow = 'RUNNING' if active else 'UNRUN' if not runs else 'EXECUTION_ERROR' if failure_context else 'FAIL' if status == 'FAIL' else 'NEEDS_EVIDENCE' if status == 'UNKNOWN' else 'PASS'
+            rows.append({'workflow_status': workflow, 'failure_context': failure_context, 'case': case, 'answer': dict(answer) if answer else None, 'evaluation': {'id': ev['id'], 'raw_checks': json.loads(ev['checks_json']), 'detail': json.loads(ev['detail_json']), 'created_at': ev['created_at']} if ev else None, 'effective_checks': checks, 'overall': status, 'active': active, 'runs': runs, 'reviews': reviews})
         decisions = [dict(r) for r in db.execute('SELECT * FROM decisions WHERE batch_id=? ORDER BY rowid', (bid,))]
         for d in decisions:
             d['valid'] = d['revision'] == batch['revision'] and not blockers
-        return {'batch': batch, 'frozen': frozen, 'cases': rows, 'blockers': blockers, 'notes': [dict(r) for r in db.execute('SELECT * FROM notes WHERE batch_id=? ORDER BY rowid', (bid,))], 'decisions': decisions, 'events': [dict(r) for r in db.execute('SELECT * FROM events WHERE batch_id=? ORDER BY rowid', (bid,))]}
+        return {'dispositions': [dict(r, valid=r['revision'] == batch['revision']) for r in db.execute('SELECT * FROM dispositions WHERE batch_id=? ORDER BY rowid', (bid,))], 'batch': batch, 'frozen': frozen, 'cases': rows, 'blockers': blockers, 'notes': [dict(r) for r in db.execute('SELECT * FROM notes WHERE batch_id=? ORDER BY rowid', (bid,))], 'decisions': decisions, 'events': [dict(r) for r in db.execute('SELECT * FROM events WHERE batch_id=? ORDER BY rowid', (bid,))]}
 
     def read(self, sid, path):
         with self.db() as db:
@@ -271,8 +274,13 @@ class Application:
                 return {'version': VERSION, 'provider': PROVIDER_LABEL, 'provider_id': PROVIDER, 'postprocess_version': POSTPROCESS_VERSION, 'wire_api': 'responses', 'global_calls_used': budget_used, 'global_call_cap': CALL_CAP, 'configured': self.client.enabled, 'provider_warning': warning, 'models': ALLOWED_MODELS, 'judge_model': 'auto', 'session_calls': calls, 'session_call_cap': CALL_CAP, 'batches': batches, 'templates': self.fixtures, 'limits': ['聚焦3变体/2母题；构造证据，不是实时行情或投资建议', '同供应商裁判，参考未独立人工复核', 'H05/Q08与全量测试集尚未迁移，原型另行保留', '当前浏览器凭会话Cookie恢复；不具备登录与多人审批']}
             if path == '/api/archive':
                 return json.loads((HERE/'archive.json').read_text(encoding='utf-8'))
-            if path.startswith('/api/batches/'):
-                return self.snapshot(db, sid, path.split('/')[-1])
+            parts = path.strip('/').split('/')
+            if len(parts) in {3, 4} and parts[:2] == ['api', 'batches']:
+                require(len(parts) == 3 or parts[3] == 'export', '接口不存在', 404)
+                snapshot = self.snapshot(db, sid, parts[2])
+                if len(parts) == 4:
+                    return {'export_version': VERSION, 'exported_at': now(), 'scope': '当前会话单批次审计导出；非生产发布或不可篡改认证', 'snapshot': snapshot}
+                return snapshot
         raise Problem('接口不存在', 404)
 
     def write(self, sid, route, body, token):
@@ -317,8 +325,10 @@ class Application:
                     require(frozen.get('postprocess_version') == POSTPROCESS_VERSION, '旧批次冻结了旧后处理配置，请新建批次；原结果保留', 409)
                 if action == 'notes':
                     note = text(body.get('text'))
-                    db.execute('INSERT INTO notes VALUES(?,?,?,?,?)', (uid('note'), bid, batch['revision'], note, now()))
-                    self.event(db, bid, 'note', {'text': note, 'revision': batch['revision'], 'does_not_unblock': True})
+                    case_id = body.get('case_id')
+                    require(case_id is None or case_id in {c['id'] for c in frozen['cases']}, '笔记案例不属于当前范围')
+                    db.execute('INSERT INTO notes(id,batch_id,revision,text,created_at,case_id) VALUES(?,?,?,?,?,?)', (uid('note'), bid, batch['revision'], note, now(), case_id))
+                    self.event(db, bid, 'note', {'text': note, 'case_id': case_id, 'revision': batch['revision'], 'does_not_unblock': True})
                     response = {'batch_id': bid}
                 elif action == 'candidate':
                     require(not batch['parent_id'], '请从原始基线建立候选，首版不嵌套候选')
@@ -370,6 +380,16 @@ class Application:
                     reason = text(body.get('reason'))
                     db.execute('INSERT INTO reviews VALUES(?,?,?,?,?,?,?,?)', (uid('review'), bid, ev['id'], key, target, reason, body['evidence_id'], now()))
                     self.bump(db, bid, 'human_review', {'evaluation_id': ev['id'], 'check': key, 'target': target, 'reason': reason})
+                    response = {'batch_id': bid}
+                elif action == 'dispositions':
+                    outcome = body.get('outcome')
+                    require(outcome in {'return_for_fix', 'needs_evidence', 'archive'}, '处置类型非法')
+                    snapshot = self.snapshot(db, sid, bid)
+                    require(not any(c['active'] for c in snapshot['cases']), '执行中不能记录处置', 409)
+                    require(outcome == 'archive' or not any(d['valid'] for d in snapshot['decisions']), '当前已有有效通过决定；新证据改变判断后再退回', 409)
+                    reason = text(body.get('reason'))
+                    db.execute('INSERT INTO dispositions VALUES(?,?,?,?,?,?)', (uid('disposition'), bid, batch['revision'], outcome, reason, now()))
+                    self.event(db, bid, 'disposition', {'outcome': outcome, 'reason': reason, 'revision': batch['revision']})
                     response = {'batch_id': bid}
                 elif action == 'decisions':
                     snapshot = self.snapshot(db, sid, bid)

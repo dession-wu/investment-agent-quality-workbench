@@ -18,7 +18,7 @@ def run():
     volume_created=False
     try:
         docker('volume','create',volume);volume_created=True
-        docker('run','-d','--name',name,'-p','127.0.0.1::8765','--mount','source='+volume+',target=/data','investment-agent-mvp:v0.7.4');created=True
+        docker('run','-d','--name',name,'-p','127.0.0.1::8765','--mount','source='+volume+',target=/data','investment-agent-mvp:v0.8');created=True
         port=json.loads(docker('inspect','--format','{{json .NetworkSettings.Ports}}',name))['8765/tcp'][0]['HostPort']
         base='http://127.0.0.1:'+port
         opener=build_opener(HTTPCookieProcessor(CookieJar()))
@@ -47,8 +47,8 @@ def run():
         assert before==after
         archive=get('/api/archive');assert len(archive['records'])==28
         assert get('/api/state')['session_calls']==0
-        report={'version':'v0.7.4','checked_at':datetime.now(timezone.utc).isoformat(),'image_id':docker('image','inspect','--format','{{.Id}}','investment-agent-mvp:v0.7.4'),'image_user':docker('inspect','--format','{{.Config.User}}',name),'startup_http':'PASS','volume_write':'PASS','restart_restores_cookie_bound_batch_and_note':before==after,'archive_records':len(archive['records']),'provider_configured':False,'new_api_calls':0,'public_deployment':'NOT_RUN','browser':'NOT_RUN','test_container_and_volume':'removed in finally'}
-        (Path(__file__).parent/'容器验证结果_v0.7.4.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
+        report={'version':'v0.8','checked_at':datetime.now(timezone.utc).isoformat(),'image_id':docker('image','inspect','--format','{{.Id}}','investment-agent-mvp:v0.8'),'image_user':docker('inspect','--format','{{.Config.User}}',name),'startup_http':'PASS','volume_write':'PASS','restart_restores_cookie_bound_batch_and_note':before==after,'archive_records':len(archive['records']),'provider_configured':False,'new_api_calls':0,'public_deployment':'NOT_RUN','browser':'NOT_RUN','test_container_and_volume':'removed in finally'}
+        (Path(__file__).parent/'容器验证结果_v0.8.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
         print(json.dumps(report,ensure_ascii=False,indent=2))
     finally:
         if created:docker('rm','-f',name)

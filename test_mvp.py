@@ -427,9 +427,81 @@ class MVPTests(unittest.TestCase):
                     self.assertEqual(counts(),baseline)
         self.assertEqual(self.app.read(self.sid,'/api/state')['global_calls_used'],CALL_CAP)
 
+    def test_34_legacy_note_table_migrates_without_losing_records(self):
+        bid=self.create(source='constructed')
+        self.app.close()
+        with self.app.db() as db:
+            db.execute('DROP TABLE notes')
+            db.execute('CREATE TABLE notes(id TEXT PRIMARY KEY,batch_id TEXT,revision INTEGER,text TEXT,created_at TEXT)')
+            db.execute('INSERT INTO notes VALUES(?,?,?,?,?)',('old-note',bid,1,'legacy preserved','test'))
+        self.app=Application(self.path,self.client)
+        note=self.get(bid)['notes'][0]
+        self.assertEqual(note['text'],'legacy preserved');self.assertIsNone(note['case_id'])
+        self.action(bid,'notes',{'text':'case note','case_id':'F02'})
+        self.app.close();self.app=Application(self.path,self.client)
+        self.assertEqual(len(self.get(bid)['notes']),2)
+
+    def test_35_case_note_scope_does_not_unblock_or_bump(self):
+        bid=self.create(source='constructed');before=self.get(bid)
+        self.action(bid,'notes',{'text':'only F02','case_id':'F02'})
+        after=self.get(bid)
+        self.assertEqual(after['batch']['revision'],before['batch']['revision'])
+        self.assertEqual(after['blockers'],before['blockers'])
+        self.assertEqual(after['notes'][0]['case_id'],'F02')
+        with self.assertRaises(Problem):self.action(bid,'notes',{'text':'invalid scope','case_id':'F07A'})
+
+    def test_36_disposition_is_audited_and_not_quality_override(self):
+        bid=self.create(source='constructed');before=self.get(bid)
+        self.action(bid,'dispositions',{'outcome':'needs_evidence','reason':'need independent reference'})
+        after=self.get(bid)
+        self.assertTrue(after['dispositions'][0]['valid'])
+        self.assertEqual(after['blockers'],before['blockers'])
+        self.assertEqual(after['batch']['revision'],before['batch']['revision'])
+        with self.assertRaises(Problem):self.action(bid,'dispositions',{'outcome':'pass','reason':'cannot bypass'})
+        with self.assertRaises(Problem):self.action(bid,'decisions',{'reason':'still unknown'})
+
+    def test_37_valid_pass_only_allows_archive_and_preserves_decision(self):
+        bid=self.create();self.run_cases(bid,['F02'])
+        self.action(bid,'decisions',{'reason':'limited pass'})
+        with self.assertRaises(Problem):self.action(bid,'dispositions',{'outcome':'return_for_fix','reason':'contradiction'})
+        self.action(bid,'dispositions',{'outcome':'archive','reason':'completed review'})
+        self.assertTrue(self.get(bid)['decisions'][0]['valid'])
+        self.app.close();self.app=Application(self.path,self.client)
+        self.assertEqual(self.get(bid)['dispositions'][0]['outcome'],'archive')
+
+    def test_38_export_owns_scope_and_excludes_private_session(self):
+        bid=self.create(source='constructed')
+        exported=self.app.read(self.sid,'/api/batches/'+bid+'/export')
+        self.assertEqual(exported['snapshot']['batch']['id'],bid)
+        self.assertNotIn(self.sid,json.dumps(exported))
+        self.assertNotIn('test-secret-not-a-real-key',json.dumps(exported))
+        other,_=self.app.session(None)
+        with self.assertRaises(Problem):self.app.read(other,'/api/batches/'+bid+'/export')
+        self.assertEqual(self.app.read(self.sid,'/api/state')['global_calls_used'],0)
+
+    def test_39_workflow_states_distinguish_unrun_content_and_execution(self):
+        bid=self.create(source='constructed')
+        self.assertEqual(self.get(bid)['cases'][0]['workflow_status'],'UNRUN')
+        self.run_cases(bid,['F02'])
+        self.assertEqual(self.get(bid)['cases'][0]['workflow_status'],'FAIL')
+        self.client.fail=True;self.action(bid,'reevaluate',{'case_ids':['F02']})
+        deadline=time.monotonic()+3
+        while self.get(bid)['cases'][0]['active']:
+            if time.monotonic()>deadline:self.fail('task timeout')
+            time.sleep(.01)
+        self.assertEqual(self.get(bid)['cases'][0]['workflow_status'],'EXECUTION_ERROR')
+
+    def test_40_disposition_stales_after_review_and_revision_conflict(self):
+        bid=self.create();self.run_cases(bid,['F02'])
+        old=self.get(bid);ev=old['cases'][0]['evaluation']
+        self.action(bid,'dispositions',{'outcome':'return_for_fix','reason':'inspect further'})
+        self.action(bid,'reviews',{'evaluation_id':ev['id'],'check_key':'task','target':'FAIL','reason':'human concern','evidence_id':old['frozen']['reference']['id']})
+        self.assertFalse(self.get(bid)['dispositions'][0]['valid'])
+        with self.assertRaises(Problem):self.write('/api/batches/'+bid+'/dispositions',{'revision':old['batch']['revision'],'outcome':'archive','reason':'stale request'})
+
 if __name__=='__main__':
     suite=unittest.defaultTestLoader.loadTestsFromTestCase(MVPTests)
     result=unittest.TextTestRunner(verbosity=2).run(suite)
-    report={'version':'v0.7.4','provider':'explicitly_simulated','scope':'实际Python HTTP服务器、SQLite、会话Cookie和领域约束；模型返回为测试替身，不是浏览器或真实API验收','tests_run':result.testsRun,'passed':result.testsRun-len(result.errors)-len(result.failures),'failures':[(str(t),trace) for t,trace in result.failures+result.errors]}
-    (Path(__file__).parent/'测试结果_v0.7.4.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
+    report={'version':'v0.8','provider':'explicitly_simulated','scope':'实际Python HTTP服务器、SQLite、会话Cookie和领域约束；模型返回为测试替身，不是浏览器或真实API验收','tests_run':result.testsRun,'passed':result.testsRun-len(result.errors)-len(result.failures),'failures':[(str(t),trace) for t,trace in result.failures+result.errors]}
+    (Path(__file__).parent/'测试结果_v0.8.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
     raise SystemExit(0 if result.wasSuccessful() else 1)
