@@ -20,3 +20,6 @@
 @media(max-width:720px){.start-task{padding:20px}.start-task h2{font-size:20px}.task-navigation{gap:8px}.task-navigation button{font-size:12px;padding:10px 8px}.task-cue{padding:16px}.task-cue h2{font-size:17px}.task-cue button{width:100%}}
 
 .scope-badges{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px}
+
+/* Canonical product identity: business name only, no version/provider badges. */
+.brand{display:flex;align-items:center;gap:9px;white-space:normal}.brand .brand-mark{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:8px;background:var(--primary,#214c44);color:#fff;font-size:18px;flex:none}.brand span{font-size:12px;font-weight:400;line-height:1.5}.edition{display:none}#provider-status{font-size:12px;color:var(--muted,#64736c)}@media(max-width:720px){.brand span{display:none}.brand{font-size:20px}}

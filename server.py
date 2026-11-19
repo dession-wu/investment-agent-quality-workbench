@@ -15,9 +15,9 @@ from numeric import quantitative, value_in_quote, VERSION as NUMERIC_VERSION
 
 HERE = Path(__file__).resolve().parent
 WORKSPACE = HERE.parent.parent
-VERSION = 'v0.8.3'
+VERSION = 'v0.9.0'
 PROVIDER = 'aliyun_token_plan'
-PROVIDER_LABEL = '百炼 Token Plan'
+PROVIDER_LABEL = '在线模型'
 CALL_CAP = 6
 INPUT_LIMIT = 8000
 POSTPROCESS_VERSION = 'judge-json-v0.7.1-single-fence'
@@ -322,7 +322,7 @@ class Application:
                 if action not in {'notes'}:
                     require(type(body.get('revision')) is int and body['revision'] == batch['revision'], '依据已变化，请刷新后重新提交', 409)
                 if action != 'notes':
-                    require(frozen.get('provider') == PROVIDER and frozen.get('wire_api') == 'responses', '旧批次冻结了DeepSeek，不能静默换供应商；请新建Token Plan批次', 409)
+                    require(frozen.get('provider') == PROVIDER and frozen.get('wire_api') == 'responses', '此任务使用旧核验配置，请新建任务；原始记录保留', 409)
                     require(frozen.get('judge_parameters', {}).get('enable_thinking') is not False, '旧批次冻结了接口不支持的关闭思考参数，请新建批次；不会修改旧记录', 409)
                     require(frozen.get('postprocess_version') == POSTPROCESS_VERSION, '旧批次冻结了旧后处理配置，请新建批次；原结果保留', 409)
                 if action == 'notes':
@@ -347,7 +347,7 @@ class Application:
                     new_id = self.create(db, sid, text(body.get('name', batch['name']+' · 候选'), 80), bid, 'generated', next_config)
                     response = {'batch_id': new_id}
                 elif action in {'run', 'reevaluate'}:
-                    require(self.client.enabled, '服务端未配置Token Plan，未发送请求', 409)
+                    require(self.client.enabled, '在线核验暂不可用，未发送请求', 409)
                     selected = body.get('case_ids')
                     scope = {c['id']: c for c in frozen['cases']}
                     require(isinstance(selected, list) and selected and all(isinstance(k, str) for k in selected) and len(selected) == len(set(selected)) and set(selected) <= set(scope), '执行范围必须属于冻结清单')
@@ -356,6 +356,8 @@ class Application:
                     need = 2 if batch['source'] == 'generated' and action != 'reevaluate' else 1
                     used = db.execute('SELECT used FROM provider_budget WHERE provider=?', (PROVIDER,)).fetchone()['used']
                     require(used + need <= CALL_CAP, '全局低成本调用额度不足；不会自动增加额度', 409)
+                    counter = db.execute('SELECT used FROM provider_calls WHERE session_id=? AND provider=?', (sid, PROVIDER)).fetchone()
+                    require((counter['used'] if counter else 0) + need <= CALL_CAP, '本会话核验额度不足，未创建运行任务', 409)
                     for cid in selected:
                         last = db.execute('SELECT * FROM runs WHERE batch_id=? AND case_id=? ORDER BY rowid DESC LIMIT 1', (bid, cid)).fetchone()
                         if action == 'reevaluate':
@@ -495,7 +497,7 @@ class Application:
         self.pool.shutdown(wait=True)
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = 'InvestmentMVP/0.7.1'
+    server_version = 'WenHeng'
     def log_message(self, format, *args):
         pass  # Requests and cookies are not written to ordinary console logs.
 

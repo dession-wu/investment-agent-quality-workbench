@@ -1,0 +1,94 @@
+{
+  "version": "v0.9.0",
+  "checked_at": "2026-11-19T10:30:55.745244+00:00",
+  "surface": "ACTUAL_PUBLIC_HEADLESS_EDGE_DOM_AND_REAL_PROVIDER",
+  "browser": "157.0.4341.60",
+  "desktop": "1440x1000",
+  "narrow": "390x844",
+  "brand_no_vendor_or_release_labels": true,
+  "created_task_via_ui": true,
+  "default_target_generated": true,
+  "saved_note_and_derived_candidate_via_ui": true,
+  "run_clicked_in_real_browser": true,
+  "requests_used": 2,
+  "global_calls_used": 2,
+  "remaining_global_calls": 4,
+  "run_statuses": [
+    {
+      "kind": "generation",
+      "status": "completed",
+      "error": null,
+      "http_status": 200,
+      "usage": {
+        "input_tokens": 393,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 164,
+        "output_tokens_details": {
+          "reasoning_tokens": 107
+        },
+        "total_tokens": 557,
+        "x_details": [
+          {
+            "input_tokens": 393,
+            "output_tokens": 164,
+            "output_tokens_details": {
+              "reasoning_tokens": 107
+            },
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 557,
+            "x_billing_type": "response_api"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "judge",
+      "status": "completed",
+      "error": null,
+      "http_status": 200,
+      "usage": {
+        "input_tokens": 736,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 568,
+        "output_tokens_details": {
+          "reasoning_tokens": 453
+        },
+        "total_tokens": 1304,
+        "x_details": [
+          {
+            "input_tokens": 736,
+            "output_tokens": 568,
+            "output_tokens_details": {
+              "reasoning_tokens": 453
+            },
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 1304,
+            "x_billing_type": "response_api"
+          }
+        ]
+      }
+    }
+  ],
+  "overall": "PASS",
+  "checks": {
+    "numeric": "PASS",
+    "safety": "PASS",
+    "task": "PASS"
+  },
+  "candidate_id": "batch-bd95319349e44a59",
+  "refresh_restores_candidate": true,
+  "narrow_horizontal_overflow": false,
+  "page_errors": [],
+  "automatic_retry": false,
+  "claims_limited_to": "F02 constructed reference, headless Edge; no physical phone test and no generalized accuracy claim"
+}

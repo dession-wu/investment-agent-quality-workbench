@@ -510,9 +510,20 @@ class MVPTests(unittest.TestCase):
         with self.assertRaises(Problem) as caught:self.write('/api/batches',{'name':'duplicate','case_ids':['F02','F02']})
         self.assertIn('不能重复',str(caught.exception))
 
+    def test_43_session_budget_rejects_whole_chain_before_scheduling(self):
+        bid=self.create()
+        with self.app.db() as db:
+            db.execute('INSERT INTO provider_calls(session_id,provider,used) VALUES(?,?,?)',(self.sid,PROVIDER,CALL_CAP-1))
+        with self.assertRaises(Problem) as error:
+            self.action(bid,'run',{'case_ids':['F02']})
+        self.assertEqual(error.exception.status,409)
+        with self.app.db() as db:
+            self.assertEqual(db.execute('SELECT count(*) FROM runs').fetchone()[0],0)
+            self.assertEqual(db.execute('SELECT used FROM provider_budget WHERE provider=?',(PROVIDER,)).fetchone()[0],0)
+
 if __name__=='__main__':
     suite=unittest.defaultTestLoader.loadTestsFromTestCase(MVPTests)
     result=unittest.TextTestRunner(verbosity=2).run(suite)
-    report={'version':'v0.8.3','provider':'explicitly_simulated','scope':'实际Python HTTP服务器、SQLite、会话Cookie和领域约束；模型返回为测试替身，不是浏览器或真实API验收','tests_run':result.testsRun,'passed':result.testsRun-len(result.errors)-len(result.failures),'failures':[(str(t),trace) for t,trace in result.failures+result.errors]}
-    (Path(__file__).parent/'测试结果_v0.8.3.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
+    report={'version':'v0.9.0','provider':'explicitly_simulated','scope':'实际Python HTTP服务器、SQLite、会话Cookie和领域约束；模型返回为测试替身，不是浏览器或真实API验收','tests_run':result.testsRun,'passed':result.testsRun-len(result.errors)-len(result.failures),'failures':[(str(t),trace) for t,trace in result.failures+result.errors]}
+    (Path(__file__).parent/'测试结果_v0.9.0.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
     raise SystemExit(0 if result.wasSuccessful() else 1)

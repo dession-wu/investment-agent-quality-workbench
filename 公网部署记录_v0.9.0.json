@@ -1,0 +1,27 @@
+{
+  "version": "v0.9.0",
+  "product": "问衡",
+  "deployed": true,
+  "public_url": "https://podnotes.cloud/investment/",
+  "provider_configured": true,
+  "credential_delivery": "server-only read-only bind mount; not environment value or image content",
+  "existing_rows_before": {
+    "batches": 20,
+    "notes": 8,
+    "runs": 0,
+    "decisions": 0
+  },
+  "existing_rows_after": {
+    "batches": 20,
+    "notes": 8,
+    "runs": 0,
+    "decisions": 0
+  },
+  "global_calls_before": 0,
+  "global_calls_after_deploy": 0,
+  "global_call_cap": 6,
+  "budget_reset": false,
+  "private_backup_in_deliverables": false,
+  "new_calls_during_deploy": 0,
+  "browser": "PENDING"
+}
