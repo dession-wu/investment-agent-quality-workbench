@@ -15,7 +15,7 @@ from numeric import quantitative, value_in_quote, VERSION as NUMERIC_VERSION
 
 HERE = Path(__file__).resolve().parent
 WORKSPACE = HERE.parent.parent
-VERSION = 'v0.8.2'
+VERSION = 'v0.8.3'
 PROVIDER = 'aliyun_token_plan'
 PROVIDER_LABEL = '百炼 Token Plan'
 CALL_CAP = 6

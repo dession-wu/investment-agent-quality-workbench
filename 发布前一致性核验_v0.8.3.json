@@ -1,0 +1,15 @@
+{
+  "version": "v0.8.3",
+  "public_response_sha256": {
+    "index.html": "818654f0b3f237e1bc43107a894b94d3533901fc01a7c7ae9d4f2571db997f5d",
+    "app.js": "18b433a8768fc1070ae7d8cf691ccd4b836681c1e10a3ebe9ca5d35740f7d4e5",
+    "style.css": "708898b98a9fe46b01fa1636e0807643e16b4423cba191691b416a359a39e180"
+  },
+  "comparison": "JS/CSS byte-identical; HTML same after specific existing CDN analytics injection removal",
+  "numeric_and_schema": "unchanged",
+  "backend_delta": "VERSION only",
+  "public_probe": "13/13 PASS HTTP, not browser",
+  "new_paid_calls": 0,
+  "browser_visual": "NOT_VERIFIED; v0.8.1 user report not equivalent to v0.8.3 acceptance",
+  "recording": "NO_ACCESSIBLE_FILE; still not delivered"
+}

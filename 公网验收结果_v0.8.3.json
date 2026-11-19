@@ -1,0 +1,26 @@
+{
+  "version": "v0.8.3",
+  "checked_at": "2026-11-19T07:53:54.839294+00:00",
+  "url": "https://podnotes.cloud/investment/",
+  "surface": "ACTUAL_PUBLIC_HTTPS_HTTP_CLIENT_NOT_BROWSER",
+  "checks": {
+    "four_view_public_entry": "PASS",
+    "case_note_persists_and_does_not_unblock": "PASS",
+    "candidate_is_frozen_and_unrun": "PASS",
+    "needs_evidence_audit_without_override": "PASS",
+    "return_for_fix_audit": "PASS",
+    "archive_and_audit_export": "PASS",
+    "keyless_execution_and_unknown_approval_blocked": "PASS",
+    "export_session_isolation": "PASS",
+    "note_case_scope_guard": "PASS",
+    "readonly_28_calls": "PASS",
+    "private_paths_not_served": "PASS",
+    "no_provider_calls": "PASS",
+    "homepage_unaffected": "PASS"
+  },
+  "global_calls_before": 0,
+  "global_calls_after": 0,
+  "new_paid_calls": 0,
+  "browser_visual": "NOT_VERIFIED",
+  "video": "NOT_RECORDED"
+}

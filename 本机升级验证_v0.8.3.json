@@ -1,0 +1,25 @@
+{
+  "version": "v0.8.3",
+  "preserved_rows": {
+    "before": {
+      "batches": 7,
+      "notes": 2,
+      "answers": 6,
+      "runs": 8,
+      "evaluations": 6,
+      "decisions": 1
+    },
+    "after": {
+      "batches": 7,
+      "notes": 2,
+      "answers": 6,
+      "runs": 8,
+      "evaluations": 6,
+      "decisions": 1
+    }
+  },
+  "global_calls": 6,
+  "cap": 6,
+  "new_paid_calls": 0,
+  "surface": "HTTP and SQLite, not browser"
+}
