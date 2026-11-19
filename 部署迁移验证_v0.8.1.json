@@ -1,0 +1,25 @@
+{
+  "version": "v0.8.1",
+  "deployment": "existing public container and volume upgraded",
+  "before_rows": {
+    "sessions": 11,
+    "batches": 8,
+    "notes": 3,
+    "runs": 0,
+    "decisions": 0
+  },
+  "after_rows": {
+    "sessions": 12,
+    "batches": 8,
+    "notes": 3,
+    "runs": 0,
+    "decisions": 0
+  },
+  "preserved_existing_data": true,
+  "global_calls_before": 0,
+  "global_calls_after": 0,
+  "configured": false,
+  "new_paid_calls": 0,
+  "private_backup": "work/public-before-v081.sqlite3; excluded from deliverables",
+  "browser": "NOT_RUN"
+}

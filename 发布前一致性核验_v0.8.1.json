@@ -1,0 +1,14 @@
+{
+  "version": "v0.8.1",
+  "public_response_sha256": {
+    "index.html": "7e3d69b8e903722e17b0326d81787b05d055cf5fecbb7e3e87bd7ffd96653299",
+    "app.js": "e236db4a2109e50926fe88c479cbc74c97dabfaa6b12754928490ff901ef8725",
+    "style.css": "e97e3bba3111d61fc6ca33d979364762260918f9a63caca815b01b2fee8c8804"
+  },
+  "public_static_comparison": "JS/CSS byte-identical; HTML application markup identical after removing existing Cloudflare analytics beacon injection",
+  "backend_delta": "VERSION only; schema and numeric unchanged",
+  "first_public_probe": "Interrupted by TLS EOF during HTTPS handshake; not completed",
+  "repeat_public_probe": "13/13 PASS; transport-only retry with stable idempotency key available in verifier",
+  "new_paid_calls": 0,
+  "browser_visual": "NOT_VERIFIED"
+}

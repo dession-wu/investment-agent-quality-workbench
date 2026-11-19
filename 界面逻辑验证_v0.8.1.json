@@ -1,0 +1,29 @@
+{
+  "version": "v0.8.1",
+  "scope": "Node VM rendering/action checks; not real browser",
+  "passed": 21,
+  "total": 21,
+  "checks": [
+    "subpath API base",
+    "unrun blocker stays unrun, not FAIL",
+    "inspector has no fabricated success trace or literal error highlights",
+    "new wizard renders fixture fields and hides technical configuration",
+    "gate empty state explains missing pair",
+    "pair gate preserves unrun and blocks approval",
+    "mismatched benchmark blocks comparison approval",
+    "original UNKNOWN cannot be manually upgraded after human FAIL",
+    "legacy task retains note but disables mutation and no false running",
+    "candidate inherits D2 selection instead of hidden D1 reset",
+    "inspector notes show correct scope and escape content",
+    "real history remains readonly and exposes both original calls",
+    "work desk has one dominant creation action and concise visual workflow",
+    "help safely escapes text and exposes accessible expandable control",
+    "policy paragraphs disclosed while actionable restriction remains visible",
+    "note drafts restored after disclosure HTML transformation",
+    "help click pins and outside click / Escape removes pinned state",
+    "responsive help has focus / hover preview and narrow-screen placement",
+    "guide action exposes unified workflow and boundaries",
+    "route recognizes inspector deep link",
+    "archive/home handler navigates"
+  ]
+}
